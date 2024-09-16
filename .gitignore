@@ -3,6 +3,9 @@
 ################################################################################
 
 /.vs
-/src/PgcSharedLib/.vs/PgcSharedLib
+/src/PgcSharedLib/.vs
 /src/PgcSharedLib/bin/Debug
 /src/PgcSharedLib/obj
+/test/PgcSharedLib.Test/.vs
+/test/PgcSharedLib.Test/bin/Debug/net8.0
+/test/PgcSharedLib.Test/obj
