@@ -363,19 +363,18 @@ namespace System.Collections.Generic
             this.items[index] = item;
         }
 
-
         protected static void VerifyValueType(object value)
         {
             if (value == null)
             {
                 if (typeof(T).IsValueType)
                 {
-                    throw new ArgumentException($"The type of item, {typeof(T).GetType().Name}, must not be NULL in SynchronizedList.", nameof(value));
+                    throw new ArgumentException("The type of item must not be NULL in SynchronizedList.", nameof(value));
                 }
             }
             else if (value is not T)
             {
-                throw new ArgumentException($"The type of item and {typeof(T).GetType().Name} are different in SynchronizedList.", nameof(value));
+                throw new ArgumentException("The type of item and T are different in SynchronizedList.", nameof(value));
             }
         }
 
