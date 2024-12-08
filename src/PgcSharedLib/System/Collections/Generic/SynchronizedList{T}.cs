@@ -33,7 +33,9 @@ namespace System.Collections.Generic
     /// Thread-safe list.
     /// </summary>
     /// <typeparam name="T">The type of item.</typeparam>
+    [System.Diagnostics.DebuggerDisplay("Count = {Count}")]
     [System.Runtime.InteropServices.ComVisible(false)]
+    [Serializable]
     public class SynchronizedList<T> : IList<T>, IList
     {
         #region Fields
