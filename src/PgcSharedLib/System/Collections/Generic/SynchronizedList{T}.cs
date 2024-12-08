@@ -54,7 +54,7 @@ namespace System.Collections.Generic
         {
             var _items = new List<T>();
             this.items = _items;
-            this.sync = ((ICollection)_items).SyncRoot;
+            this.sync = new object();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace System.Collections.Generic
             ArgumentNullException.ThrowIfNull(syncRoot);
 
             this.items = new List<T>();
-            this.sync = new object();
+            this.sync = syncRoot;
         }
 
         /// <summary>
