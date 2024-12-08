@@ -52,8 +52,7 @@ namespace System.Collections.Generic
         /// </summary>
         public SynchronizedList()
         {
-            var _items = new List<T>();
-            this.items = _items;
+            this.items = new List<T>();
             this.sync = new object();
         }
 
