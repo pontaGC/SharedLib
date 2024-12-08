@@ -66,7 +66,7 @@ namespace System.Collections.Generic
             ArgumentNullException.ThrowIfNull(syncRoot);
 
             this.items = new List<T>();
-            this.sync = syncRoot;
+            this.sync = new object();
         }
 
         /// <summary>
