@@ -5,9 +5,9 @@ namespace PgcSharedLib.Rules;
 /// <summary>
 /// One rule that a target object must satisfy.
 /// </summary>
-/// <typeparam name="TTarget">The type of object to check.</typeparam>
+/// <typeparam name="T">The type of object to check.</typeparam>
 /// <typeparam name="TError">The type of error if rule fails.</typeparam>
-public interface IRule<in TTarget, TError>
+public interface IRule<in T, TError>
 {
     /// <summary>
     /// Gets a rule name.
@@ -20,5 +20,5 @@ public interface IRule<in TTarget, TError>
     /// </summary>
     /// <param name="target">The target object to check.</param>
     /// <returns>The checked result.</returns>
-    RuleResult<TError> Apply(TTarget? target);
+    RuleResult<TError> Apply(T? target);
 }

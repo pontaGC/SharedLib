@@ -5,10 +5,12 @@ namespace PgcSharedLib.Rules;
 /// <summary>
 /// The delegate rule.
 /// </summary>
-public class DelegateRule<TTarget, TError> : IRule<TTarget, TError>
+/// <typeparam name="T">The type of the target object to which the rule applies.</typeparam>
+/// <typeparam name="TError">The type of the error object indicating the rule fails.</typeparam>
+public class DelegateRule<T, TError> : IRule<T, TError>
 {
-    private readonly Predicate<TTarget> applyRule;
-    private readonly Func<TTarget, TError> getError;
+    private readonly Predicate<T> applyRule;
+    private readonly Func<T, TError> getError;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DelegateRule{TTarget, TError}"/> class.
@@ -20,7 +22,7 @@ public class DelegateRule<TTarget, TError> : IRule<TTarget, TError>
     /// <paramref name="ruleName"/> or <paramref name="applyRule"/> or <paramref name="getError"/> is <c>null</c>.
     /// </exception>
     /// <exception cref="ArgumentException"><paramref name="ruleName"/> is an empty string.</exception>
-    public DelegateRule(string ruleName, Predicate<TTarget> applyRule, Func<TTarget, TError> getError)
+    public DelegateRule(string ruleName, Predicate<T> applyRule, Func<T, TError> getError)
     {
         ArgumentException.ThrowIfNullOrEmpty(ruleName);
         ArgumentNullException.ThrowIfNull(applyRule);
@@ -36,7 +38,7 @@ public class DelegateRule<TTarget, TError> : IRule<TTarget, TError>
     public string Name { get; }
 
     /// <inheritdoc />
-    public RuleResult<TError> Apply(TTarget? target)
+    public RuleResult<TError> Apply(T? target)
     {
         var passed = applyRule(target);
         if (passed)

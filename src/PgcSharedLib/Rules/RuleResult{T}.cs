@@ -5,14 +5,14 @@ namespace PgcSharedLib.Rules;
 /// <summary>
 /// The result to apply one rule to the target object.
 /// </summary>
-/// <typeparam name="TError">The type of error if rule fails.</typeparam>
+/// <typeparam name="TError">The type of the error object if rule fails.</typeparam>
 public class RuleResult<TError>
 {
     private RuleResult(string ruleName, bool isPassed, TError error)
     {
-        RuleName = ruleName ?? string.Empty;
-        IsPassed = isPassed;
-        Error = error;
+        this.RuleName = ruleName ?? string.Empty;
+        this.IsPassed = isPassed;
+        this.Error = error;
     }
 
     /// <summary>
