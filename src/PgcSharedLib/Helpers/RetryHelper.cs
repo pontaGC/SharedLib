@@ -213,15 +213,8 @@
                     await Task.Delay(interval);
                 }
             }
-
-            try
-            {
-                await task;
-            }
-            catch (AggregateException)
-            {
-                throw;
-            }
+            
+            await task;
         }
 
         /// <summary>
@@ -250,15 +243,8 @@
                     await Task.Delay(interval);
                 }
             }
-
-            try
-            {
-                await task;
-            }
-            catch (AggregateException ae)
-            {
-                throw new AggregateException(ae.Message, ae.InnerExceptions);
-            }
+            
+            await task;
         }
 
         /// <summary>
@@ -341,15 +327,8 @@
                     await Task.Delay(interval);
                 }
             }
-
-            try
-            {
-                return await task;
-            }
-            catch (AggregateException ae)
-            {
-                throw new AggregateException(ae.Message, ae.InnerExceptions);
-            }
+            
+            return await task;
         }
 
         /// <summary>
