@@ -1,4 +1,4 @@
-﻿namespace PgcSharedLib.Rules;
+﻿namespace SharedLib.Rules;
 
 /// <summary>
 /// The list of <see cref="IRule{T, TError}"/>.

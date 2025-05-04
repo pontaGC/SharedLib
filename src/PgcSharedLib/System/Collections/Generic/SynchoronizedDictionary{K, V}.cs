@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace System.Collections.Generic
 {
@@ -22,7 +23,7 @@ namespace System.Collections.Generic
         /// Initializes a new instance of the <see cref="SynchoronizedDictionary{TKey, TValue}"/> class.
         /// </summary>
         public SynchoronizedDictionary()
-            : this (0, null) { }
+            : this(0, null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchoronizedDictionary{TKey, TValue}"/> class.
@@ -30,7 +31,7 @@ namespace System.Collections.Generic
         /// <param name="capacity">The initial number of elements that <see cref="SynchoronizedDictionary{TKey, TValue}"/> can contain.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
         public SynchoronizedDictionary(int capacity)
-            : this (capacity, null) { }
+            : this(capacity, null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchoronizedDictionary{TKey, TValue}"/> class.
@@ -60,7 +61,7 @@ namespace System.Collections.Generic
         {
             ArgumentNullException.ThrowIfNull(syncRoot);
 
-            this.dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
+            dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
             this.syncRoot = syncRoot;
         }
 
@@ -130,7 +131,7 @@ namespace System.Collections.Generic
         {
             ArgumentNullException.ThrowIfNull(syncRoot);
 
-            this.dictionary = new Dictionary<TKey, TValue>(collection, comparer);
+            dictionary = new Dictionary<TKey, TValue>(collection, comparer);
             this.syncRoot = syncRoot;
         }
 
@@ -143,17 +144,17 @@ namespace System.Collections.Generic
         {
             get
             {
-                lock (this.syncRoot)
+                lock (syncRoot)
                 {
-                    return this.dictionary[key];
+                    return dictionary[key];
                 }
             }
 
             set
             {
-                lock (this.syncRoot)
+                lock (syncRoot)
                 {
-                    this.dictionary[key] = value;
+                    dictionary[key] = value;
                 }
             }
         }
@@ -167,9 +168,9 @@ namespace System.Collections.Generic
         {
             get
             {
-                lock (this.syncRoot)
+                lock (syncRoot)
                 {
-                    return this.dictionary.Count;
+                    return dictionary.Count;
                 }
             }
         }
@@ -179,9 +180,9 @@ namespace System.Collections.Generic
         {
             get
             {
-                lock (this.syncRoot)
+                lock (syncRoot)
                 {
-                    return this.dictionary.Keys;
+                    return dictionary.Keys;
                 }
             }
         }
@@ -191,9 +192,9 @@ namespace System.Collections.Generic
         {
             get
             {
-                lock (this.syncRoot)
+                lock (syncRoot)
                 {
-                    return this.dictionary.Values;
+                    return dictionary.Values;
                 }
             }
         }
@@ -208,9 +209,9 @@ namespace System.Collections.Generic
         /// the default generic equality comparer <see cref="EqualityComparer{T}.Default"/> is used.
         /// Getting the value of this property is an O(1) operation.
         /// </remarks>
-        public IEqualityComparer<TKey> Comparer => this.dictionary.Comparer;
+        public IEqualityComparer<TKey> Comparer => dictionary.Comparer;
 
-        private IDictionary CastIDictionary => this.dictionary;
+        private IDictionary CastIDictionary => dictionary;
 
         #endregion
 
@@ -219,42 +220,42 @@ namespace System.Collections.Generic
         /// <inheritdoc />
         public void Add(TKey key, TValue value)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                this.dictionary.Add(key, value);
+                dictionary.Add(key, value);
             }
         }
 
         /// <inheritdoc />
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            this.Add(item.Key, item.Value);
+            Add(item.Key, item.Value);
         }
 
         /// <inheritdoc />
         public void Clear()
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                this.dictionary.Clear();
+                dictionary.Clear();
             }
         }
 
         /// <inheritdoc />
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.dictionary.Contains(item);
+                return dictionary.Contains(item);
             }
         }
 
         /// <inheritdoc />
         public bool ContainsKey(TKey key)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.dictionary.ContainsKey(key);
+                return dictionary.ContainsKey(key);
             }
         }
 
@@ -271,51 +272,51 @@ namespace System.Collections.Generic
         /// </remarks>
         public bool ContainsValue(TValue value)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.dictionary.ContainsValue(value);
+                return dictionary.ContainsValue(value);
             }
         }
 
         /// <inheritdoc />
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                this.CastIDictionary.CopyTo(array, arrayIndex);
+                CastIDictionary.CopyTo(array, arrayIndex);
             }
         }
 
         /// <inheritdoc />
         public bool Remove(TKey key)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.dictionary.Remove(key);
+                return dictionary.Remove(key);
             }
         }
 
         /// <inheritdoc />
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            return this.Remove(item.Key);
+            return Remove(item.Key);
         }
 
         /// <inheritdoc />
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.dictionary.TryGetValue(key, out value);
+                return dictionary.TryGetValue(key, out value);
             }
         }
 
         /// <inheritdoc />
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.dictionary.GetEnumerator();
+                return dictionary.GetEnumerator();
             }
         }
 
@@ -333,9 +334,9 @@ namespace System.Collections.Generic
         /// </remarks>
         public bool TryAdd(TKey key, TValue value)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.dictionary.TryAdd(key, value);
+                return dictionary.TryAdd(key, value);
             }
         }
 
@@ -347,9 +348,9 @@ namespace System.Collections.Generic
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
         public int EnsureCapacity(int capacity)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.dictionary.EnsureCapacity(capacity);
+                return dictionary.EnsureCapacity(capacity);
             }
         }
 
@@ -365,9 +366,9 @@ namespace System.Collections.Generic
         /// </remarks>
         public void TrimExcess(int capacity)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                this.dictionary.TrimExcess(capacity);
+                dictionary.TrimExcess(capacity);
             }
         }
 
@@ -376,110 +377,110 @@ namespace System.Collections.Generic
         /// </summary>
         public void TrimExcess()
         {
-            this.TrimExcess(this.Count);
+            TrimExcess(Count);
         }
 
         #endregion
 
         #region Exlicit interface implementation
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => ((IDictionary<TKey, TValue>)this.dictionary).IsReadOnly;
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => ((IDictionary<TKey, TValue>)dictionary).IsReadOnly;
 
         #region IDictionary
 
-        object? IDictionary.this[object key] 
-        { 
+        object? IDictionary.this[object key]
+        {
             get
             {
-                lock (this.syncRoot)
+                lock (syncRoot)
                 {
-                    return this.CastIDictionary[key];
+                    return CastIDictionary[key];
                 }
             }
 
             set
             {
-                lock (this.syncRoot)
+                lock (syncRoot)
                 {
-                    this.CastIDictionary[key] = value;
+                    CastIDictionary[key] = value;
                 }
-            } 
+            }
         }
 
-        bool IDictionary.IsFixedSize => this.CastIDictionary.IsFixedSize;
+        bool IDictionary.IsFixedSize => CastIDictionary.IsFixedSize;
 
-        bool IDictionary.IsReadOnly => this.CastIDictionary.IsReadOnly;
+        bool IDictionary.IsReadOnly => CastIDictionary.IsReadOnly;
 
-        ICollection IDictionary.Keys => this.CastIDictionary.Keys;
+        ICollection IDictionary.Keys => CastIDictionary.Keys;
 
-        ICollection IDictionary.Values => this.CastIDictionary.Values;
+        ICollection IDictionary.Values => CastIDictionary.Values;
 
-        int ICollection.Count => this.Count;
+        int ICollection.Count => Count;
 
         bool ICollection.IsSynchronized => true;
 
-        object ICollection.SyncRoot => this.syncRoot;
+        object ICollection.SyncRoot => syncRoot;
 
         void ICollection.CopyTo(Array array, int index)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                this.CastIDictionary.CopyTo(array, index);
+                CastIDictionary.CopyTo(array, index);
             }
         }
 
         void IDictionary.Add(object key, object? value)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-               this.CastIDictionary.Add(key, value);
+                CastIDictionary.Add(key, value);
             }
         }
 
         void IDictionary.Clear()
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                this.CastIDictionary.Clear();
+                CastIDictionary.Clear();
             }
         }
 
         bool IDictionary.Contains(object key)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.CastIDictionary.Contains(key);
+                return CastIDictionary.Contains(key);
             }
         }
 
         void IDictionary.Remove(object key)
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                this.CastIDictionary.Remove(key);
+                CastIDictionary.Remove(key);
             }
         }
 
         IDictionaryEnumerator IDictionary.GetEnumerator()
         {
-            lock (this.syncRoot)
+            lock (syncRoot)
             {
-                return this.CastIDictionary.GetEnumerator();
+                return CastIDictionary.GetEnumerator();
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         #endregion
 
         #region IReadOnlyDictionary<TKey, TValue>
 
-        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => this.Keys;
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
 
-        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => this.Values;
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
 
         #endregion
 

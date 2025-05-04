@@ -26,9 +26,6 @@
 
 namespace System.Collections.Generic
 {
-    using System;
-    using System.Collections;
-
     /// <summary>
     /// Thread-safe list.
     /// </summary>
@@ -52,8 +49,8 @@ namespace System.Collections.Generic
         /// </summary>
         public SynchronizedList()
         {
-            this.items = new List<T>();
-            this.sync = new object();
+            items = new List<T>();
+            sync = new object();
         }
 
         /// <summary>
@@ -64,8 +61,8 @@ namespace System.Collections.Generic
         {
             ArgumentNullException.ThrowIfNull(syncRoot);
 
-            this.items = new List<T>();
-            this.sync = syncRoot;
+            items = new List<T>();
+            sync = syncRoot;
         }
 
         /// <summary>
@@ -79,8 +76,8 @@ namespace System.Collections.Generic
             ArgumentNullException.ThrowIfNull(syncRoot);
             ArgumentNullException.ThrowIfNull(list);
 
-            this.items = new List<T>(list);
-            this.sync = syncRoot;
+            items = new List<T>(list);
+            sync = syncRoot;
         }
 
         /// <summary>
@@ -94,11 +91,11 @@ namespace System.Collections.Generic
             ArgumentNullException.ThrowIfNull(syncRoot);
             ArgumentNullException.ThrowIfNull(list);
 
-            this.items = new List<T>(list.Length);
+            items = new List<T>(list.Length);
             for (int i = 0; i < list.Length; i++)
-                this.items.Add(list[i]);
+                items.Add(list[i]);
 
-            this.sync = syncRoot;
+            sync = syncRoot;
         }
 
         #endregion
@@ -107,12 +104,12 @@ namespace System.Collections.Generic
 
         protected List<T> Items
         {
-            get { return this.items; }
+            get { return items; }
         }
 
         protected object SyncRoot
         {
-            get { return this.sync; }
+            get { return sync; }
         }
 
         #endregion
@@ -122,9 +119,9 @@ namespace System.Collections.Generic
         /// <inheritdoc />
         public IEnumerator<T> GetEnumerator()
         {
-            lock (this.sync)
+            lock (sync)
             {
-                return this.items.GetEnumerator();
+                return items.GetEnumerator();
             }
         }
 
@@ -135,7 +132,7 @@ namespace System.Collections.Generic
         /// <inheritdoc />
         public int Count
         {
-            get { lock (this.sync) { return this.items.Count; } }
+            get { lock (sync) { return items.Count; } }
         }
 
         /// <inheritdoc />
@@ -143,21 +140,21 @@ namespace System.Collections.Generic
         {
             get
             {
-                lock (this.sync)
+                lock (sync)
                 {
-                    return this.items[index];
+                    return items[index];
                 }
             }
             set
             {
-                lock (this.sync)
+                lock (sync)
                 {
-                    if (index < 0 || index >= this.items.Count)
+                    if (index < 0 || index >= items.Count)
                     {
                         throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range");
                     }
 
-                    this.SetItem(index, value);
+                    SetItem(index, value);
                 }
             }
         }
@@ -165,37 +162,37 @@ namespace System.Collections.Generic
         /// <inheritdoc />
         public void Add(T item)
         {
-            lock (this.sync)
+            lock (sync)
             {
-                int index = this.items.Count;
-                this.InsertItem(index, item);
+                int index = items.Count;
+                InsertItem(index, item);
             }
         }
 
         /// <inheritdoc />
         public void Clear()
         {
-            lock (this.sync)
+            lock (sync)
             {
-                this.ClearItems();
+                ClearItems();
             }
         }
 
         /// <inheritdoc />
         public void CopyTo(T[] array, int index)
         {
-            lock (this.sync)
+            lock (sync)
             {
-                this.items.CopyTo(array, index);
+                items.CopyTo(array, index);
             }
         }
 
         /// <inheritdoc />
         public bool Contains(T item)
         {
-            lock (this.sync)
+            lock (sync)
             {
-                return this.items.Contains(item);
+                return items.Contains(item);
             }
         }
 
@@ -203,36 +200,36 @@ namespace System.Collections.Generic
         /// <inheritdoc />
         public int IndexOf(T item)
         {
-            lock (this.sync)
+            lock (sync)
             {
-                return this.InternalIndexOf(item);
+                return InternalIndexOf(item);
             }
         }
 
         /// <inheritdoc />
         public void Insert(int index, T item)
         {
-            lock (this.sync)
+            lock (sync)
             {
-                if (index < 0 || index > this.items.Count)
+                if (index < 0 || index > items.Count)
                 {
                     throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range");
                 }
 
-                this.InsertItem(index, item);
+                InsertItem(index, item);
             }
         }
 
         /// <inheritdoc />
         public bool Remove(T item)
         {
-            lock (this.sync)
+            lock (sync)
             {
-                int index = this.InternalIndexOf(item);
+                int index = InternalIndexOf(item);
                 if (index < 0)
                     return false;
 
-                this.RemoveItem(index);
+                RemoveItem(index);
                 return true;
             }
         }
@@ -240,14 +237,14 @@ namespace System.Collections.Generic
         /// <inheritdoc />
         public void RemoveAt(int index)
         {
-            lock (this.sync)
+            lock (sync)
             {
-                if (index < 0 || index >= this.items.Count)
+                if (index < 0 || index >= items.Count)
                 {
                     throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out of range");
                 }
 
-                this.RemoveItem(index);
+                RemoveItem(index);
             }
         }
 
@@ -257,7 +254,7 @@ namespace System.Collections.Generic
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IList)this.items).GetEnumerator();
+            return ((IList)items).GetEnumerator();
         }
 
         bool ICollection<T>.IsReadOnly
@@ -272,14 +269,14 @@ namespace System.Collections.Generic
 
         object ICollection.SyncRoot
         {
-            get { return this.sync; }
+            get { return sync; }
         }
 
         void ICollection.CopyTo(Array array, int index)
         {
-            lock (this.sync)
+            lock (sync)
             {
-                ((IList)this.items).CopyTo(array, index);
+                ((IList)items).CopyTo(array, index);
             }
         }
 
@@ -310,35 +307,35 @@ namespace System.Collections.Generic
         {
             VerifyValueType(value);
 
-            lock (this.sync)
+            lock (sync)
             {
-                this.Add((T)value);
-                return this.Count - 1;
+                Add((T)value);
+                return Count - 1;
             }
         }
 
         bool IList.Contains(object value)
         {
             VerifyValueType(value);
-            return this.Contains((T)value);
+            return Contains((T)value);
         }
 
         int IList.IndexOf(object value)
         {
             VerifyValueType(value);
-            return this.IndexOf((T)value);
+            return IndexOf((T)value);
         }
 
         void IList.Insert(int index, object value)
         {
             VerifyValueType(value);
-            this.Insert(index, (T)value);
+            Insert(index, (T)value);
         }
 
         void IList.Remove(object value)
         {
             VerifyValueType(value);
-            this.Remove((T)value);
+            Remove((T)value);
         }
 
         #endregion
@@ -347,22 +344,22 @@ namespace System.Collections.Generic
 
         protected virtual void ClearItems()
         {
-            this.items.Clear();
+            items.Clear();
         }
 
         protected virtual void InsertItem(int index, T item)
         {
-            this.items.Insert(index, item);
+            items.Insert(index, item);
         }
 
         protected virtual void RemoveItem(int index)
         {
-            this.items.RemoveAt(index);
+            items.RemoveAt(index);
         }
 
         protected virtual void SetItem(int index, T item)
         {
-            this.items[index] = item;
+            items[index] = item;
         }
 
         protected static void VerifyValueType(object value)
@@ -390,7 +387,7 @@ namespace System.Collections.Generic
 
             for (int i = 0; i < count; i++)
             {
-                if (object.Equals(items[i], item))
+                if (Equals(items[i], item))
                 {
                     return i;
                 }

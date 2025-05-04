@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace PgcSharedLib.Rules;
+namespace SharedLib.Rules;
 
 /// <summary>
 /// The delegate rule.
@@ -22,7 +22,7 @@ public class DelegateRule<T> : IRule<T>
     /// <exception cref="ArgumentException"><paramref name="ruleName"/> is an empty string.</exception>
     public DelegateRule(string ruleName, Predicate<T> applyRule, Func<T, string> getError)
     {
-        this.rule = new DelegateRule<T, string>(ruleName, applyRule, getError);
+        rule = new DelegateRule<T, string>(ruleName, applyRule, getError);
     }
 
     /// <inheritdoc />

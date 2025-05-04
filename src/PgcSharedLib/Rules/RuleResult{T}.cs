@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace PgcSharedLib.Rules;
+namespace SharedLib.Rules;
 
 /// <summary>
 /// The result to apply one rule to the target object.
@@ -10,9 +10,9 @@ public class RuleResult<TError>
 {
     private RuleResult(string ruleName, bool isPassed, TError error)
     {
-        this.RuleName = ruleName ?? string.Empty;
-        this.IsPassed = isPassed;
-        this.Error = error;
+        RuleName = ruleName ?? string.Empty;
+        IsPassed = isPassed;
+        Error = error;
     }
 
     /// <summary>

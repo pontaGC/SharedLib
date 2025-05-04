@@ -1,4 +1,4 @@
-﻿namespace PgcSharedLib.DependencyInjection
+﻿namespace SharedLib.DependencyInjection
 {
     /// <summary>
     /// A container to create an instance of type for registration of dependencies.

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace PgcSharedLib.Rules;
+namespace SharedLib.Rules;
 
 /// <summary>
 /// The delegate rule.

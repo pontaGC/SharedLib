@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using PgcSharedLib.Helpers;
+using SharedLib.Helpers;
 
-namespace Shared.System.IO
+namespace System.IO
 {
     /// <summary>
     /// The file system operations with retry.
@@ -169,16 +169,16 @@ namespace Shared.System.IO
                 return;
             }
 
-            foreach (var filePath in this.EnumerateFiles(directoryPath, false))
+            foreach (var filePath in EnumerateFiles(directoryPath, false))
             {
-                this.DeleteFile(filePath);
+                DeleteFile(filePath);
             }
 
             if (recursive)
             {
-                foreach (var subDirPath in this.EnumerateDirectories(directoryPath, false))
+                foreach (var subDirPath in EnumerateDirectories(directoryPath, false))
                 {
-                    this.DeleteDirectory(subDirPath);
+                    DeleteDirectory(subDirPath);
                 }
             }
         }
@@ -196,16 +196,16 @@ namespace Shared.System.IO
         /// <inhertidoc />
         public IEnumerable<FileInfo> CopyFiles(string sourceDirPath, string destDirPath)
         {
-            if (!this.ExistsDirectory(destDirPath))
+            if (!ExistsDirectory(destDirPath))
             {
-                this.CreateDirectory(destDirPath);
+                CreateDirectory(destDirPath);
             }
 
             var copiedFileInfos = new List<FileInfo>();
-            foreach (var filePath in this.EnumerateDirectories(sourceDirPath, true))
+            foreach (var filePath in EnumerateDirectories(sourceDirPath, true))
             {
-                var copyingFilePath = Path.Combine(destDirPath, this.GetFileName(filePath));
-                this.CopyFile(filePath, copyingFilePath, true);
+                var copyingFilePath = Path.Combine(destDirPath, GetFileName(filePath));
+                CopyFile(filePath, copyingFilePath, true);
                 copiedFileInfos.Add(new FileInfo(copyingFilePath));
             }
 
@@ -219,15 +219,15 @@ namespace Shared.System.IO
 
             try
             {
-                if (!this.ExistsDirectory(destDirPath))
+                if (!ExistsDirectory(destDirPath))
                 {
-                    this.CreateDirectory(destDirPath);
+                    CreateDirectory(destDirPath);
                 }
 
-                foreach (var filePath in this.EnumerateDirectories(sourceDirPath, true))
+                foreach (var filePath in EnumerateDirectories(sourceDirPath, true))
                 {
-                    var copyingFilePath = Path.Combine(destDirPath, this.GetFileName(filePath));
-                    this.CopyFile(filePath, copyingFilePath, true);
+                    var copyingFilePath = Path.Combine(destDirPath, GetFileName(filePath));
+                    CopyFile(filePath, copyingFilePath, true);
                     copiedFileInfos.Add(new FileInfo(copyingFilePath));
                 }
 
@@ -246,7 +246,7 @@ namespace Shared.System.IO
         /// <inhertidoc />
         public string AddExtensionIfNotHave(string filename, string extension)
         {
-            if (this.HasExtension(filename))
+            if (HasExtension(filename))
             {
                 return filename;
             }
@@ -273,7 +273,7 @@ namespace Shared.System.IO
                 return string.Empty;
             }
 
-            var directoryName = this.GetDirectoryName(path);
+            var directoryName = GetDirectoryName(path);
             if (string.IsNullOrEmpty(directoryName))
             {
                 return string.Empty;
@@ -376,7 +376,7 @@ namespace Shared.System.IO
         /// <inheritdoc />
         public IEnumerable<string> EnumerateFiles(string directoryPath, bool recursive)
         {
-            return this.EnumerateFiles(directoryPath, "*.*", recursive);
+            return EnumerateFiles(directoryPath, "*.*", recursive);
         }
 
         /// <inheritdoc />
@@ -388,13 +388,13 @@ namespace Shared.System.IO
         /// <inheritdoc />
         public IEnumerable<FileInfo> EnumerateFileInfos(string directoryPath, bool recursive)
         {
-            return this.EnumerateFileInfos(directoryPath, "*", recursive);
+            return EnumerateFileInfos(directoryPath, "*", recursive);
         }
 
         /// <inheritdoc />
         public IEnumerable<FileInfo> EnumerateFileInfos(string directoryPath, string searchPattern, bool recursive)
         {
-            return this.EnumerateFiles(directoryPath, searchPattern, recursive).Select(path => new FileInfo(path));
+            return EnumerateFiles(directoryPath, searchPattern, recursive).Select(path => new FileInfo(path));
         }
 
         /// <inheritdoc />
@@ -406,7 +406,7 @@ namespace Shared.System.IO
         /// <inheritdoc />
         public IEnumerable<DirectoryInfo> EnumerateDirectoryInfos(string directoryPath, bool recursive)
         {
-            return this.EnumerateDirectories(directoryPath, recursive).Select(path => new DirectoryInfo(path));
+            return EnumerateDirectories(directoryPath, recursive).Select(path => new DirectoryInfo(path));
         }
 
         #endregion

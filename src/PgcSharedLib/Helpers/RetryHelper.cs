@@ -1,4 +1,4 @@
-﻿namespace PgcSharedLib.Helpers
+﻿namespace SharedLib.Helpers
 {
     /// <summary>
     /// Retry helper for calling the methods.
@@ -213,7 +213,7 @@
                     await Task.Delay(interval);
                 }
             }
-            
+
             await task;
         }
 
@@ -243,7 +243,7 @@
                     await Task.Delay(interval);
                 }
             }
-            
+
             await task;
         }
 
@@ -327,7 +327,7 @@
                     await Task.Delay(interval);
                 }
             }
-            
+
             return await task;
         }
 

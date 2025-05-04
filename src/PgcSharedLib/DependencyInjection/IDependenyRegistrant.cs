@@ -1,4 +1,4 @@
-﻿namespace PgcSharedLib.DependencyInjection
+﻿namespace SharedLib.DependencyInjection
 {
     /// <summary>
     /// The registrant that registers the dependencies to a container.

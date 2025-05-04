@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
 
-namespace PgcSharedLib.Extensions
+namespace SharedLib.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="Type"/> object.

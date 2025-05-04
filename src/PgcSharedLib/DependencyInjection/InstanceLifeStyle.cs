@@ -1,4 +1,4 @@
-﻿namespace PgcSharedLib.DependencyInjection
+﻿namespace SharedLib.DependencyInjection
 {
     /// <summary>
     /// Life style of a registered instance in the <see cref="IDIContainer"/>.

@@ -1,4 +1,4 @@
-﻿namespace PgcSharedLib.Rules
+﻿namespace SharedLib.Rules
 {
     /// <summary>
     /// One rule that a target object must satisfy.

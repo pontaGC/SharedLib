@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
-using PgcSharedLib.Extensions;
+using SharedLib.Extensions;
 using SimpleInjector;
 
-namespace PgcSharedLib.DependencyInjection
+namespace SharedLib.DependencyInjection
 {
     /// <summary>
     /// IoC Container using a SimpleInjector library.
@@ -37,7 +37,7 @@ namespace PgcSharedLib.DependencyInjection
             where TInterface : class
             where TImplementation : class, TInterface
         {
-            this.container.Register<TInterface, TImplementation>(LifeStyles[lifeStyle]);
+            container.Register<TInterface, TImplementation>(LifeStyles[lifeStyle]);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace PgcSharedLib.DependencyInjection
         public void Register<TImplementation>()
             where TImplementation : class
         {
-            this.container.Register<TImplementation>();
+            container.Register<TImplementation>();
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace PgcSharedLib.DependencyInjection
             where TInterface : class
             where TImplementation : class, TInterface
         {
-            this.container.Collection.Append<TInterface, TImplementation>(LifeStyles[lifeStyle]);
+            container.Collection.Append<TInterface, TImplementation>(LifeStyles[lifeStyle]);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace PgcSharedLib.DependencyInjection
         public void RegisterInstance<TInterface>(TInterface instance)
             where TInterface : class
         {
-            this.container.RegisterInstance(instance);
+            container.RegisterInstance(instance);
         }
 
         /// <summary>
@@ -83,21 +83,21 @@ namespace PgcSharedLib.DependencyInjection
         {
             Debug.Assert(typeof(TService).IsInterfaceOrAbstractBaseClass(), $"{nameof(TService)} must be interface or abstract base class.");
 
-            this.container.RegisterSingleton<TService>();
+            container.RegisterSingleton<TService>();
         }
 
         /// <inheritdoc />
         public void RegisterSingleton<TService>(Func<TService> serviceInstanceFactory)
             where TService : class
         {
-            Debug.Assert(typeof(TService).IsAbstract , $"{nameof(TService)} must be interface or abstract base class.");
+            Debug.Assert(typeof(TService).IsAbstract, $"{nameof(TService)} must be interface or abstract base class.");
 
             if (serviceInstanceFactory is null)
             {
                 throw new ArgumentNullException(nameof(serviceInstanceFactory));
             }
 
-            this.container.RegisterSingleton(serviceInstanceFactory);
+            container.RegisterSingleton(serviceInstanceFactory);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace PgcSharedLib.DependencyInjection
         /// <returns>An instance of the implementation type has been registered.</returns>
         public TInterface Resolve<TInterface>() where TInterface : class
         {
-            return this.container.GetInstance<TInterface>();
+            return container.GetInstance<TInterface>();
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace PgcSharedLib.DependencyInjection
         public IEnumerable<TInterface> GetAllInstances<TInterface>()
             where TInterface : class
         {
-            return this.container.GetAllInstances<TInterface>();
+            return container.GetAllInstances<TInterface>();
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace PgcSharedLib.DependencyInjection
         /// </summary>
         public void Release()
         {
-            this.container?.Dispose();
+            container?.Dispose();
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace PgcSharedLib.DependencyInjection
         /// </summary>
         public void Dispose()
         {
-            this.Release();
+            Release();
         }
 
         /// <summary>
@@ -143,11 +143,11 @@ namespace PgcSharedLib.DependencyInjection
         /// <exception cref="InvalidOperationException">Throws the invalid registered instance is found.</exception>
         public void Verify()
         {
-            this.container.Verify();
+            container.Verify();
 
             // All registration were guaranteed to be valid when debugging.
-            this.container.Options.EnableAutoVerification = false;
-            this.EnableAutoVerificationForDebug();
+            container.Options.EnableAutoVerification = false;
+            EnableAutoVerificationForDebug();
         }
 
         #endregion
@@ -157,7 +157,7 @@ namespace PgcSharedLib.DependencyInjection
         [Conditional("DEBUG")]
         private void EnableAutoVerificationForDebug()
         {
-            this.container.Options.EnableAutoVerification = true;
+            container.Options.EnableAutoVerification = true;
         }
 
         #endregion
