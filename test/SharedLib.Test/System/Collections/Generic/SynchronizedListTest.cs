@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace PgcSharedLib.Test.System.Collections.Generic
+namespace SharedLib.Test.System.Collections.Generic
 {
     public class SynchronizedListTest
     {
