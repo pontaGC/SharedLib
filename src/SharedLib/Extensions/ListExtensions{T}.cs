@@ -10,16 +10,21 @@ namespace SharedLib.Extensions
         /// <summary>
         /// Adds an object to the head of the list.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of the source list.</typeparam>
+        /// <typeparam name="T">The type of the elements of the source list.</typeparam>
         /// <param name="source">The list to add.</param>
         /// <param name="item">
         /// The object to be added to the end of the <see cref="IList{T}"/>.
         /// The value can be <c>null</c> for reference types.
         /// </param>
         [DebuggerStepThrough]
-        public static void AddToHead<TSource>(this IList<TSource> source, TSource item)
+        public static void AddToHead<T>(this IList<T> source, T item)
         {
-            source?.Insert(0, item);
+            if (source is null || source.IsReadOnly)
+            {
+                return;
+            }
+
+            source.Insert(0, item);
         }
 
         /// <summary>

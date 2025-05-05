@@ -20,6 +20,19 @@ namespace SharedLib.Test.Extensions
         }
 
         [Fact]
+        public void AddToHead_ReadOnlyCollection()
+        {
+            var list = new List<string>() { "One", "Two", "Three" };
+            var sut = new ReadOnlyCollection<string>(list);
+            var item = "Zero";
+
+            sut.AddToHead(item);
+
+            Assert.Equal(3, sut.Count);
+            Assert.DoesNotContain(item, sut);
+        }
+
+        [Fact]
         public void AddToHead_AddItemToEmptyList()
         {
             IList<int> sut = new List<int>();
