@@ -9,3 +9,5 @@
 /test/SharedLib.Test/.vs
 /test/SharedLib.Test/bin/Debug/net8.0
 /test/SharedLib.Test/obj
+/src/SharedLibTests/bin/Debug/net8.0
+/src/SharedLibTests/obj
