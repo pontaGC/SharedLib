@@ -1,51 +1,53 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace SharedLib.Rules;
-
-/// <summary>
-/// The delegate rule.
-/// </summary>
-/// <typeparam name="T">The type of the target object to which the rule applies.</typeparam>
-/// <typeparam name="TError">The type of the error object indicating the rule fails.</typeparam>
-public class DelegateRule<T, TError> : IRule<T, TError>
+namespace SharedLib.Rules
 {
-    private readonly Predicate<T> applyRule;
-    private readonly Func<T, TError> getError;
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="DelegateRule{TTarget, TError}"/> class.
+    /// The delegate rule.
     /// </summary>
-    /// <param name="ruleName">The rule name.</param>
-    /// <param name="applyRule">The check function that the target object satisfy a rule.</param>
-    /// <param name="getError">The function to get error if rule fails.</param>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="ruleName"/> or <paramref name="applyRule"/> or <paramref name="getError"/> is <c>null</c>.
-    /// </exception>
-    /// <exception cref="ArgumentException"><paramref name="ruleName"/> is an empty string.</exception>
-    public DelegateRule(string ruleName, Predicate<T> applyRule, Func<T, TError> getError)
+    /// <typeparam name="T">The type of the target object to which the rule applies.</typeparam>
+    /// <typeparam name="TError">The type of the error object indicating the rule fails.</typeparam>
+    public class DelegateRule<T, TError> : IRule<T, TError>
     {
-        ArgumentException.ThrowIfNullOrEmpty(ruleName);
-        ArgumentNullException.ThrowIfNull(applyRule);
-        ArgumentNullException.ThrowIfNull(getError);
+        private readonly Predicate<T> applyRule;
+        private readonly Func<T, TError> getError;
 
-        Name = ruleName;
-        this.applyRule = applyRule;
-        this.getError = getError;
-    }
-
-    /// <inheritdoc />
-    [NotNull]
-    public string Name { get; }
-
-    /// <inheritdoc />
-    public RuleResult<TError> Apply(T? target)
-    {
-        var passed = applyRule(target);
-        if (passed)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DelegateRule{TTarget, TError}"/> class.
+        /// </summary>
+        /// <param name="ruleName">The rule name.</param>
+        /// <param name="applyRule">The check function that the target object satisfy a rule.</param>
+        /// <param name="getError">The function to get error if rule fails.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="ruleName"/> or <paramref name="applyRule"/> or <paramref name="getError"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException"><paramref name="ruleName"/> is an empty string.</exception>
+        public DelegateRule(string ruleName, Predicate<T> applyRule, Func<T, TError> getError)
         {
-            return RuleResult<TError>.Passed(Name);
+            ArgumentException.ThrowIfNullOrEmpty(ruleName);
+            ArgumentNullException.ThrowIfNull(applyRule);
+            ArgumentNullException.ThrowIfNull(getError);
+
+            this.Name = ruleName;
+            this.applyRule = applyRule;
+            this.getError = getError;
         }
 
-        return RuleResult<TError>.Failed(Name, getError(target));
+        /// <inheritdoc />
+        [NotNull]
+        public string Name { get; }
+
+        /// <inheritdoc />
+        public RuleResult<TError> Apply(T? target)
+        {
+            var passed = this.applyRule(target);
+            if (passed)
+            {
+                return RuleResult<TError>.Passed(this.Name);
+            }
+
+            return RuleResult<TError>.Failed(this.Name, this.getError(target));
+        }
     }
 }
+
