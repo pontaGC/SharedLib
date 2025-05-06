@@ -24,6 +24,8 @@
 // Source: https://github.com/microsoft/referencesource/blob/master/System.ServiceModel/System/ServiceModel/SynchronizedCollection.cs
 //-----------------------------------------------------------------------------
 
+using System.Collections.Immutable;
+
 namespace System.Collections.Generic
 {
     /// <summary>
@@ -119,10 +121,13 @@ namespace System.Collections.Generic
         /// <inheritdoc />
         public IEnumerator<T> GetEnumerator()
         {
+            var clone = ImmutableList<T>.Empty;
             lock (sync)
             {
-                return items.GetEnumerator();
+                clone = items.ToImmutableList();
             }
+
+            return clone.GetEnumerator();
         }
 
         #endregion
