@@ -37,14 +37,8 @@ namespace System.Collections.Generic
     [Serializable]
     public class SynchronizedList<T> : IList<T>, IList
     {
-        #region Fields
-
         private readonly List<T> items;
         private readonly object sync;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchronizedList{T}"/> class.
@@ -100,10 +94,6 @@ namespace System.Collections.Generic
             sync = syncRoot;
         }
 
-        #endregion
-
-        #region Properties
-
         protected List<T> Items
         {
             get { return items; }
@@ -113,8 +103,6 @@ namespace System.Collections.Generic
         {
             get { return sync; }
         }
-
-        #endregion
 
         #region IEnumerator
 
