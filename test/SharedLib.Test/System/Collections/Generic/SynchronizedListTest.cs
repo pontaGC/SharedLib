@@ -72,7 +72,6 @@ namespace SharedLib.Test.System.Collections.Generic
                 {
                     Thread.Sleep(1);
                     sut.Add(i);
-                    Debug.WriteLine(i);
                 });
             });
 
@@ -87,6 +86,7 @@ namespace SharedLib.Test.System.Collections.Generic
             // Assert
             Assert.Equal(10, actual.Count);
             Assert.DoesNotContain(11, actual);
+            Assert.DoesNotContain(50, actual);
             Assert.DoesNotContain(99, actual);
             Assert.Equal(100, sut.Count);
         }
