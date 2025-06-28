@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace SharedLib.Serialization
+namespace SharedLib.Helpers
 {
     /// <summary>
     /// Helper to serialize or deserialize the object related to XML document.
@@ -39,8 +39,13 @@ namespace SharedLib.Serialization
                     }
                 }
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException invalidOperationEx)
             {
+                if (invalidOperationEx.InnerException is OutOfMemoryException)
+                {
+                    GCHelper.FullCollect();
+                }
+
                 // Serialization error
                 throw;
             }
@@ -76,8 +81,13 @@ namespace SharedLib.Serialization
                     serializer.Serialize(xmlWriter, source, namespaces);
                 }
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException invalidOperationEx)
             {
+                if (invalidOperationEx.InnerException is OutOfMemoryException)
+                {
+                    GCHelper.FullCollect();
+                }
+
                 // Serialization error
                 throw;
             }
@@ -151,8 +161,13 @@ namespace SharedLib.Serialization
                     }
                 }
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException invalidOperationEx)
             {
+                if (invalidOperationEx.InnerException is OutOfMemoryException)
+                {
+                    GCHelper.FullCollect();
+                }
+
                 // Deserialization error
                 throw;
             }
