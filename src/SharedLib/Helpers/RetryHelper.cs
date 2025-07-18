@@ -18,24 +18,24 @@
         /// Invokes an action with retry.
         /// If an exception that occured is a transient error or the invoker wants to retry, retry several times.
         /// </summary>
-        /// <param name="onAction">The invoking action.</param>
+        /// <param name="action">The invoking action.</param>
         /// <param name="transientExceptionFilter">
         /// The check logic whether the exception thrown is a transient exception.
         /// Retry invoking the action, if the check result is <c>true</c>. Otherwise; throws the exception.
         /// </param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="onAction"/> is <c>null</c>.</exception>
-        public static void InvokeWithRetry(this Action onAction, Predicate<Exception> transientExceptionFilter, params ushort[] retrySpans)
+        /// <exception cref="ArgumentNullException"><paramref name="action"/> is <c>null</c>.</exception>
+        public static void InvokeWithRetry(this Action action, Predicate<Exception> transientExceptionFilter, params ushort[] retrySpans)
         {
             if (transientExceptionFilter is null)
             {
-                onAction.InvokeWithRetry(retrySpans);
+                InvokeWithRetry(action, retrySpans);
                 return;
             }
 
-            if (onAction is null)
+            if (action is null)
             {
-                throw new ArgumentNullException(nameof(onAction));
+                throw new ArgumentNullException(nameof(action));
             }
 
             var intervals = GetIntervalsSafe(retrySpans);
@@ -43,7 +43,7 @@
             {
                 try
                 {
-                    onAction.Invoke();
+                    action.Invoke();
                     return;
                 }
                 catch (Exception ex)
@@ -59,20 +59,20 @@
                 }
             }
 
-            onAction.Invoke();
+            action.Invoke();
         }
 
         /// <summary>
         /// Invokes an action with retry. If an exception is occured, retry several times.
         /// </summary>
-        /// <param name="onAction">The invoking action.</param>
+        /// <param name="action">The invoking action.</param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="onAction"/> is <c>null</c>.</exception>
-        public static void InvokeWithRetry(this Action onAction, params ushort[] retrySpans)
+        /// <exception cref="ArgumentNullException"><paramref name="action"/> is <c>null</c>.</exception>
+        public static void InvokeWithRetry(this Action action, params ushort[] retrySpans)
         {
-            if (onAction is null)
+            if (action is null)
             {
-                throw new ArgumentNullException(nameof(onAction));
+                throw new ArgumentNullException(nameof(action));
             }
 
             var intervals = GetIntervalsSafe(retrySpans);
@@ -80,7 +80,7 @@
             {
                 try
                 {
-                    onAction.Invoke();
+                    action.Invoke();
                     return;
                 }
                 catch (Exception)
@@ -89,7 +89,7 @@
                 }
             }
 
-            onAction.Invoke();
+            action.Invoke();
         }
 
         /// <summary>
@@ -104,11 +104,12 @@
         /// </param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
         /// <returns>An execution result, if the execution is success. Otherwise; default value or throws the exception.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="execute"/> is <c>null</c>.</exception>
         public static TResult InvokeWithRetry<TResult>(this Func<TResult> execute, Predicate<Exception> transientExceptionFilter, params ushort[] retrySpans)
         {
             if (transientExceptionFilter is null)
             {
-                return execute.InvokeWithRetry(retrySpans);
+                return InvokeWithRetry(execute, retrySpans);
             }
 
             if (execute is null)
@@ -146,6 +147,7 @@
         /// <param name="execute">The invoking action.</param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
         /// <returns>An execution result, if the execution is success. Otherwise; default value or throws the exception.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="execute"/> is <c>null</c>.</exception>
         public static TResult InvokeWithRetry<TResult>(this Func<TResult> execute, params ushort[] retrySpans)
         {
             if (execute is null)
@@ -174,23 +176,24 @@
         /// <summary>
         /// Runs a task with retry. If an exception is occured, retry several times.
         /// </summary>
-        /// <param name="task">The running task.</param>
+        /// <param name="taskFactory">The running task factory.</param>
         /// <param name="transientExceptionFilter">
         /// The check logic whether the exception thrown is a transient exception.
         /// Retry invoking the action, if the check result is <c>true</c>. Otherwise; throws the exception.
         /// </param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
-        public static async Task RunAsyncWithRetry(Task task, Predicate<IEnumerable<Exception>> transientExceptionFilter, params ushort[] retrySpans)
+        /// <exception cref="ArgumentNullException"><paramref name="taskFactory"/> is <c>null</c>.</exception>
+        public static async Task InvokeAsyncWithRetry(this Func<Task> taskFactory, Predicate<Exception> transientExceptionFilter, params ushort[] retrySpans)
         {
             if (transientExceptionFilter is null)
             {
-                await RunAsyncWithRetry(task, retrySpans);
+                await InvokeAsyncWithRetry(taskFactory, retrySpans);
                 return;
             }
 
-            if (task is null)
+            if (taskFactory is null)
             {
-                throw new ArgumentNullException(nameof(task));
+                throw new ArgumentNullException(nameof(taskFactory));
             }
 
             var intervals = GetIntervalsSafe(retrySpans);
@@ -198,12 +201,12 @@
             {
                 try
                 {
-                    await task;
+                    await taskFactory.Invoke();
                     return;
                 }
-                catch (AggregateException ae)
+                catch (Exception ex)
                 {
-                    if (!transientExceptionFilter(ae.InnerExceptions))
+                    if (!transientExceptionFilter(ex))
                     {
                         // If this isn't a transient error or we shouldn't retry,
                         // rethrow the exception.
@@ -214,20 +217,20 @@
                 }
             }
 
-            await task;
+            await taskFactory.Invoke();
         }
 
         /// <summary>
         /// Runs a task with retry. If an exception is occured, retry several times.
         /// </summary>
-        /// <param name="task">The running task.</param>
+        /// <param name="taskFactory">The running task factory.</param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="task"/> is <c>null</c>.</exception>
-        public static async Task RunAsyncWithRetry(Task task, params ushort[] retrySpans)
+        /// <exception cref="ArgumentNullException"><paramref name="taskFactory"/> is <c>null</c>.</exception>
+        public static async Task InvokeAsyncWithRetry(this Func<Task> taskFactory, params ushort[] retrySpans)
         {
-            if (task is null)
+            if (taskFactory is null)
             {
-                throw new ArgumentNullException(nameof(task));
+                throw new ArgumentNullException(nameof(taskFactory));
             }
 
             var intervals = GetIntervalsSafe(retrySpans);
@@ -235,76 +238,41 @@
             {
                 try
                 {
-                    await task;
+                    await taskFactory.Invoke();
                     return;
                 }
-                catch (AggregateException)
+                catch
                 {
                     await Task.Delay(interval);
                 }
             }
 
-            await task;
-        }
-
-        /// <summary>
-        /// Invokes an action asynchronously with retry. If an exception is occured, retry several times.
-        /// </summary>
-        /// <param name="onAction">The invoking action.</param>
-        /// <param name="transientExceptionFilter">
-        /// The check logic whether the exception thrown is a transient exception.
-        /// Retry invoking the action, if the check result is <c>true</c>. Otherwise; throws the exception.
-        /// </param>
-        /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="onAction"/> is <c>null</c>.</exception>
-        public static async Task InvokeAsyncWithRetry(Action onAction, Predicate<IEnumerable<Exception>> transientExceptionFilter, params ushort[] retrySpans)
-        {
-            if (onAction is null)
-            {
-                throw new ArgumentNullException(nameof(onAction));
-            }
-
-            await RunAsyncWithRetry(new Task(onAction), transientExceptionFilter, retrySpans);
-        }
-
-        /// <summary>
-        /// Invokes an action asynchronously with retry. If an exception is occured, retry several times.
-        /// </summary>
-        /// <param name="onAction">The invoking action.</param>
-        /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="onAction"/> is <c>null</c>.</exception>
-        public static async Task InvokeAsyncWithRetry(Action onAction, params ushort[] retrySpans)
-        {
-            if (onAction is null)
-            {
-                throw new ArgumentNullException(nameof(onAction));
-            }
-
-            await RunAsyncWithRetry(new Task(onAction), retrySpans);
+            await taskFactory.Invoke();
         }
 
         /// <summary>
         /// Runs a task with retry. If an exception is occured, retry several times.
         /// </summary>
         /// <typeparam name="TResult">The type of invoking the method result.</typeparam>
-        /// <param name="task">The running task.</param>
+        /// <param name="taskFactory">The running task factory.</param>
         /// <param name="transientExceptionFilter">
         /// The check logic whether the exception thrown is a transient exception.
         /// Retry invoking the action, if the check result is <c>true</c>. Otherwise; throws the exception.
         /// </param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
         /// <returns>An execution result, if the execution is success. Otherwise; default value or throws the exception.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="task"/> is <c>null</c>.</exception>
-        public static async Task<TResult> RunAsyncWithRetry<TResult>(Task<TResult> task, Predicate<IEnumerable<Exception>> transientExceptionFilter, params ushort[] retrySpans)
+        /// <exception cref="ArgumentNullException"><paramref name="taskFactory"/> is <c>null</c>.</exception>
+        public static async Task InvokeAsyncWithRetry<TResult>(this Func<Task<TResult>> taskFactory, Predicate<Exception> transientExceptionFilter, params ushort[] retrySpans)
         {
             if (transientExceptionFilter is null)
             {
-                return await RunAsyncWithRetry(task, retrySpans);
+                await InvokeAsyncWithRetry(taskFactory, retrySpans);
+                return;
             }
 
-            if (task is null)
+            if (taskFactory is null)
             {
-                throw new ArgumentNullException(nameof(task));
+                throw new ArgumentNullException(nameof(taskFactory));
             }
 
             var intervals = GetIntervalsSafe(retrySpans);
@@ -312,12 +280,12 @@
             {
                 try
                 {
-                    var result = await task;
-                    return result;
+                    await taskFactory.Invoke();
+                    return;
                 }
-                catch (AggregateException ae)
+                catch (Exception ex)
                 {
-                    if (!transientExceptionFilter(ae.InnerExceptions))
+                    if (!transientExceptionFilter(ex))
                     {
                         // If this isn't a transient error or we shouldn't retry,
                         // rethrow the exception.
@@ -328,22 +296,22 @@
                 }
             }
 
-            return await task;
+            await taskFactory.Invoke();
         }
 
         /// <summary>
         /// Runs a task with retry. If an exception is occured, retry several times.
         /// </summary>
         /// <typeparam name="TResult">The type of invoking the method result.</typeparam>
-        /// <param name="task">The running task.</param>
+        /// <param name="taskFactory">The running task factory.</param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
         /// <returns>An execution result, if the execution is success. Otherwise; default value or throws the exception.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="task"/> is <c>null</c>.</exception>
-        public static async Task<TResult> RunAsyncWithRetry<TResult>(Task<TResult> task, params ushort[] retrySpans)
+        /// <exception cref="ArgumentNullException"><paramref name="taskFactory"/> is <c>null</c>.</exception>
+        public static async Task<TResult> InvokeAsyncWithRetry<TResult>(this Func<Task<TResult>> taskFactory, params ushort[] retrySpans)
         {
-            if (task is null)
+            if (taskFactory is null)
             {
-                throw new ArgumentNullException(nameof(task));
+                throw new ArgumentNullException(nameof(taskFactory));
             }
 
             var intervals = GetIntervalsSafe(retrySpans);
@@ -351,57 +319,15 @@
             {
                 try
                 {
-                    var result = await task;
-                    return result;
+                    return await taskFactory.Invoke();
                 }
-                catch (AggregateException)
+                catch
                 {
                     await Task.Delay(interval);
                 }
             }
 
-            return await task;
-        }
-
-        /// <summary>
-        /// Invokes an action asynchronously with retry.
-        /// If an exception that occured is a transient error or the invoker wants to retry, retry several times.
-        /// </summary>
-        /// <typeparam name="TResult">The type of invoking the method result.</typeparam>
-        /// <param name="execute">The invoking action.</param>
-        /// <param name="transientExceptionFilter">
-        /// The check logic whether the exception thrown is a transient exception.
-        /// Retry invoking the action, if the check result is <c>true</c>. Otherwise; throws the exception.
-        /// </param>
-        /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
-        /// <returns>An execution result, if the execution is success. Otherwise; default value or throws the exception.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="execute"/> is <c>null</c>.</exception>
-        public static async Task<TResult> InvokeAsyncWithRetry<TResult>(Func<TResult> execute, Predicate<IEnumerable<Exception>> transientExceptionFilter, params ushort[] retrySpans)
-        {
-            if (execute is null)
-            {
-                throw new ArgumentNullException(nameof(execute));
-            }
-
-            return await RunAsyncWithRetry(new Task<TResult>(execute), transientExceptionFilter, retrySpans);
-        }
-
-        /// <summary>
-        /// Invokes an action asynchronously with retry. If an exception is occured, retry several times.
-        /// </summary>
-        /// <typeparam name="TResult">The type of invoking the method result.</typeparam>
-        /// <param name="execute">The invoking action.</param>
-        /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
-        /// <returns>An execution result, if the execution is success. Otherwise; default value or throws the exception.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="execute"/> is <c>null</c>.</exception>
-        public static async Task<TResult> InvokeAsyncWithRetry<TResult>(Func<TResult> execute, params ushort[] retrySpans)
-        {
-            if (execute is null)
-            {
-                throw new ArgumentNullException(nameof(execute));
-            }
-
-            return await RunAsyncWithRetry(new Task<TResult>(execute), retrySpans);
+            return await taskFactory.Invoke();
         }
 
         #endregion
