@@ -14,10 +14,7 @@ namespace SharedLib.Helpers
         /// </summary>
         /// <param name="input">The string to covnert.</param>
         /// <param name="result">The double value after converting.</param>
-        /// <returns>
-        /// <c>true</c> if converting <paramref name="input"/> to the double value is successful,
-        /// otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if converting <paramref name="input"/> to the double value is successful, otherwise, <c>false</c>.</returns>
         public static bool TryParse(string input, out double result)
         {
             if (double.TryParse(input, DefaultNumberStyle, CultureInfo.CurrentCulture, out result))
@@ -25,8 +22,8 @@ namespace SharedLib.Helpers
                 return true;
             }
 
-            var integerInput = SwapCommaToPeriod(input);
-            if (double.TryParse(integerInput, CultureInfo.InvariantCulture, out result))
+            var swappedInput = SwapCommaToPeriod(input);
+            if (double.TryParse(swappedInput, CultureInfo.InvariantCulture, out result))
             {
                 return true;
             }
