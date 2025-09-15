@@ -16,7 +16,7 @@
 
         /// <summary>
         /// Invokes an action with retry.
-        /// If an exception that occured is a transient error or the invoker wants to retry, retry several times.
+        /// If an exception that occurs is a transient error or the invoker wants to retry, retry several times.
         /// </summary>
         /// <param name="action">The invoking action.</param>
         /// <param name="transientExceptionFilter">
@@ -63,7 +63,7 @@
         }
 
         /// <summary>
-        /// Invokes an action with retry. If an exception is occured, retry several times.
+        /// Invokes an action with retry. If an exception occurs, retry several times.
         /// </summary>
         /// <param name="action">The invoking action.</param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
@@ -141,7 +141,7 @@
         }
 
         /// <summary>
-        /// Invokes an action with retry. If an exception is occured, retry several times.
+        /// Invokes an action with retry. If an exception occurs, retry several times.
         /// </summary>
         /// <typeparam name="TResult">The type of invoking the method result.</typeparam>
         /// <param name="execute">The invoking action.</param>
@@ -174,7 +174,7 @@
         #region Asynchronously
 
         /// <summary>
-        /// Runs a task with retry. If an exception is occured, retry several times.
+        /// Runs a task with retry. If an exception occurs, retry several times.
         /// </summary>
         /// <param name="taskFactory">The running task factory.</param>
         /// <param name="transientExceptionFilter">
@@ -221,7 +221,7 @@
         }
 
         /// <summary>
-        /// Runs a task with retry. If an exception is occured, retry several times.
+        /// Runs a task with retry. If an exception occurs, retry several times.
         /// </summary>
         /// <param name="taskFactory">The running task factory.</param>
         /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
@@ -251,7 +251,45 @@
         }
 
         /// <summary>
-        /// Runs a task with retry. If an exception is occured, retry several times.
+        /// Runs a task with retry. If an exception occurs, retry several times.
+        /// </summary>
+        /// <param name="taskFactory">The running task factory.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
+        /// <returns>An execution result, if the execution is success. Otherwise; default value or throws the exception.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="taskFactory"/> is <c>null</c>.</exception>
+        /// <exception cref="OperationCanceledException">The operation is canceled.</exception>
+        public static async Task InvokeAsyncWithRetry(this Func<Task> taskFactory, CancellationToken cancellationToken, params ushort[] retrySpans)
+        {
+            if (taskFactory is null)
+            {
+                throw new ArgumentNullException(nameof(taskFactory));
+            }
+
+            var intervals = GetIntervalsSafe(retrySpans);
+            foreach (var interval in intervals)
+            {
+                try
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await taskFactory.Invoke();
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch
+                {
+                    await Task.Delay(interval, cancellationToken);
+                }
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            await taskFactory.Invoke();
+        }
+
+        /// <summary>
+        /// Runs a task with retry. If an exception occurs, retry several times.
         /// </summary>
         /// <typeparam name="TResult">The type of invoking the method result.</typeparam>
         /// <param name="taskFactory">The running task factory.</param>
@@ -300,7 +338,7 @@
         }
 
         /// <summary>
-        /// Runs a task with retry. If an exception is occured, retry several times.
+        /// Runs a task with retry. If an exception occurs, retry several times.
         /// </summary>
         /// <typeparam name="TResult">The type of invoking the method result.</typeparam>
         /// <param name="taskFactory">The running task factory.</param>
@@ -327,6 +365,45 @@
                 }
             }
 
+            return await taskFactory.Invoke();
+        }
+
+        /// <summary>
+        /// Runs a task with retry. If an exception occurs, retry several times.
+        /// </summary>
+        /// <typeparam name="TResult">The type of invoking the method result.</typeparam>
+        /// <param name="taskFactory">The running task factory.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="retrySpans">The time spans to retry. The unit of them is milliseconds.</param>
+        /// <returns>An execution result, if the execution is success. Otherwise; default value or throws the exception.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="taskFactory"/> is <c>null</c>.</exception>
+        /// <exception cref="OperationCanceledException">The operation is canceled.</exception>
+        public static async Task<TResult> InvokeAsyncWithRetry<TResult>(this Func<Task<TResult>> taskFactory, CancellationToken cancellationToken, params ushort[] retrySpans)
+        {
+            if (taskFactory is null)
+            {
+                throw new ArgumentNullException(nameof(taskFactory));
+            }
+
+            var intervals = GetIntervalsSafe(retrySpans);
+            foreach (var interval in intervals)
+            {
+                try
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    return await taskFactory.Invoke();
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch
+                {
+                    await Task.Delay(interval, cancellationToken);
+                }
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
             return await taskFactory.Invoke();
         }
 
