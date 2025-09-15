@@ -170,11 +170,12 @@ namespace SharedLib.Test.Helpers
         {
             public PeriodDecimalPointCultureInfo()
             {
-                base.Add("en-US");
-                base.Add("ja-JP");
-                base.Add("en-GB");
-                base.Add("zn-CN");
-                base.Add("ko-KR");
+                base.Add("en-US"); // United States
+                base.Add("ja-JP"); // Japan
+                base.Add("en-GB"); // United Kingdom
+                base.Add("zh-CN"); // China
+                base.Add("zh-TW"); // Taiwan
+                base.Add("ko-KR"); // Korea
             }
         }
 
@@ -182,36 +183,36 @@ namespace SharedLib.Test.Helpers
         {
             public CommaDecimalPointCultureInfo()
             {
-                base.Add("fr-FR");
-                base.Add("de-DE");
-                base.Add("it-IT");
-                base.Add("es-ES");
-                base.Add("ru-RU");
-                base.Add("nl-NL");
-                base.Add("sv-SE");
-                base.Add("fi-FI");
-                base.Add("da-DK");
-                base.Add("pt-PT");
-                base.Add("tr-TR");
-                base.Add("pl-PL");
-                base.Add("cs-CZ");
-                base.Add("hu-HU");
-                base.Add("el-GR");
-                base.Add("nb-NO");
-                base.Add("sk-SK");
-                base.Add("sl-SI");
-                base.Add("hr-HR");
-                base.Add("bg-BG");
-                base.Add("ro-RO");
-                base.Add("lt-LT");
-                base.Add("lv-LV");
-                base.Add("et-EE");
-                base.Add("uk-UA");
-                base.Add("sr-Latn-RS");
-                base.Add("sr-Cyrl-RS");
-                base.Add("ca-ES");
-                base.Add("eu-ES");
-                base.Add("gl-ES");
+                base.Add("fr-FR"); // France
+                base.Add("de-DE"); // Germany
+                base.Add("it-IT"); // Italy
+                base.Add("es-ES"); // Spain
+                base.Add("ru-RU"); // Russia
+                base.Add("nl-NL"); // Netherlands
+                base.Add("sv-SE"); // Sweden
+                base.Add("fi-FI"); // Finland
+                base.Add("da-DK"); // Denmark
+                base.Add("pt-PT"); // Portugal
+                base.Add("tr-TR"); // Turkey
+                base.Add("pl-PL"); // Poland
+                base.Add("cs-CZ"); // Czech Republic
+                base.Add("hu-HU"); // Hungary
+                base.Add("el-GR"); // Greece
+                base.Add("nb-NO"); // Norway (Bokmål)
+                base.Add("sk-SK"); // Slovakia
+                base.Add("sl-SI"); // Slovenia
+                base.Add("hr-HR"); // Croatia
+                base.Add("bg-BG"); // Bulgaria
+                base.Add("ro-RO"); // Romania
+                base.Add("lt-LT"); // Lithuania
+                base.Add("lv-LV"); // Latvia
+                base.Add("et-EE"); // Estonia
+                base.Add("uk-UA"); // Ukraine
+                base.Add("sr-Latn-RS"); // Serbia (Latin)
+                base.Add("sr-Cyrl-RS"); // Serbia (Cyrillic)
+                base.Add("ca-ES"); // Catalan (Spain)
+                base.Add("eu-ES"); // Basque (Spain)
+                base.Add("gl-ES"); // Galician (Spain)
             }
         }
 
