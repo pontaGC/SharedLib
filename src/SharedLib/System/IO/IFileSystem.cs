@@ -65,7 +65,7 @@ namespace System.IO
         /// </summary>
         /// <param name="filePath">The path of the file to create.</param>
         /// <returns>The stream of the created file.</returns>
-        /// <exception cref="Exception">See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open?view=net-8.0"/>.</exception>
+        /// <exception cref="Exception">See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open"/>.</exception>
         FileStream CreateFile(string filePath);
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace System.IO
         /// </param>
         /// <param name="share">A bitwise combination of the enumeration values that determines how the file will be shared by processes.</param>
         /// <returns>A file stream contained by the specified <c>filePath</c>.</returns>
-        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open?view=net-8.0"/>.</exception>
+        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open"/>.</exception>
         FileStream OpenFile(string filePath, FileAccess access, FileShare share);
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace System.IO
         /// <c>CanSeek</c> is true if path specifies a disk file.
         /// </param>
         /// <returns>A file stream contained by the specified <c>filePath</c>.</returns>
-        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open?view=net-8.0"/>.</exception>
+        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open"/>.</exception>
         FileStream OpenFile(string filePath, FileAccess access);
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace System.IO
         /// </summary>
         /// <param name="filePath">The file path to create a stream.</param>
         /// <returns>A file stream contained by the specified <c>filePath</c>.</returns>
-        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open?view=net-8.0"/>.</exception>
+        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open"/>.</exception>
         FileStream OpenFile(string filePath);
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace System.IO
         /// </summary>
         /// <param name="filePath">The file path to create a stream.</param>
         /// <returns>A file stream contained by the specified <c>filePath</c>.</returns>
-        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open?view=net-8.0"/>.</exception>
+        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open"/>.</exception>
         FileStream OpenReadFile(string filePath);
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace System.IO
         /// </summary>
         /// <param name="filePath">The file path to create a stream.</param>
         /// <returns>A file stream contained by the specified <c>filePath</c>.</returns>
-        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open?view=net-8.0"/>.</exception>
+        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open"/>.</exception>
         FileStream OpenOrCreateFile(string filePath);
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace System.IO
         /// <c>CanSeek</c> is true if path specifies a disk file.
         /// </param>
         /// <returns>A file stream contained by the specified <c>filePath</c>.</returns>
-        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open?view=net-8.0"/>.</exception>
+        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open"/>.</exception>
         FileStream OpenOrCreateFile(string filePath, FileAccess access);
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace System.IO
         /// </param>
         /// <param name="share">A bitwise combination of the enumeration values that determines how the file will be shared by processes.</param>
         /// <returns>A file stream contained by the specified <c>filePath</c>.</returns>
-        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open?view=net-8.0"/>.</exception>
+        /// <exception>See <see href="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.open"/>.</exception>
         FileStream OpenOrCreateFile(string filePath, FileAccess access, FileShare share);
 
         /// <summary>
@@ -168,17 +168,47 @@ namespace System.IO
         /// </summary>
         /// <param name="filePath">The path of file to read.</param>
         /// <returns>A string containing all the text in the file.</returns>
-        /// <exception>See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.readalltext?view=net-8.0#system-io-file-readalltext(system-string)"/>.</exception>
+        /// <exception>See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.readalltext#system-io-file-readalltext(system-string)"/>.</exception>
         string ReadAllText(string filePath);
+
+        /// <summary>
+        /// Reads the lines of a file that has a specified encoding.
+        /// </summary>
+        /// <param name="filePath">The path of file to read.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file. The default encoding is UTF-8.</param>
+        /// <returns>All the lines of the file, or the lines that are the result of a query.</returns>
+        /// <exception cref="Exception">See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.readlines#system-io-file-readlines(system-string)"/></exception>
+        /// <remarks>When you use <c>ReadLines</c>, you can start enumerating the collection of strings before the whole collection is returned.</remarks>
+        IEnumerable<string> ReadLines(string filePath, Encoding? encoding = null);
+
+        /// <summary>
+        /// Asynchronously reads the lines of a file that has a specified encoding.
+        /// </summary>
+        /// <param name="filePath">The path of file to read.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file. The default encoding is UTF-8.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <c>None</c>.</param>
+        /// <returns>The async enumerable that represents all the lines of the file, or the lines that are the result of a query.</returns>
+        /// <remarks>This methods does not retry, because it is assumed that processing will be retried for one line that has been read.</remarks>
+        IAsyncEnumerable<string> ReadLinesAsync(string filePath, Encoding? encoding = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Opens a file, reads all lines of the file with the specified encoding, and then closes the file.
         /// </summary>
         /// <param name="filePath">The path of file to read.</param>
-        /// <param name="encoding">The encoding applied to the contents of the file. The deafult encording is UTF-8.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file. The default encoding is UTF-8.</param>
         /// <returns>A string array containing all lines of the file.</returns>
         /// <exception cref="Exception">See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.readalllines"/>.</exception>
-        IReadOnlyCollection<string> ReadAllLine(string filePath, Encoding encoding = null);
+        IReadOnlyCollection<string> ReadAllLines(string filePath, Encoding? encoding = null);
+
+        /// <summary>
+        /// Opens a file, reads all lines of the file with the specified encoding, and then closes the file.
+        /// </summary>
+        /// <param name="filePath">The path of file to read.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file. The default encoding is UTF-8.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <c>None</c>.</param>
+        /// <returns>A string array containing all lines of the file.</returns>
+        /// <exception cref="Exception">See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.readalllinesasync#system-io-file-readalllinesasync(system-string-system-text-encoding-system-threading-cancellationtoken)"/>.</exception>
+        Task<IReadOnlyCollection<string>> ReadAllLinesAsync(string filePath, Encoding? encoding = null, CancellationToken cancellationToken = default);
 
         #endregion
 
@@ -232,7 +262,7 @@ namespace System.IO
         /// The specified path is invalid(for example, it is on an unmapped drive).
         /// </exception>
         /// <exception cref="UnauthorizedAccessException" />
-        /// <remarks>This methods throws exceptions. See the details on <see href="https://docs.microsoft.com/en-us/dotnet/api/system.io.directory.delete?view=netframework-4.8"/>.</remarks>
+        /// <remarks>This methods throws exceptions. See the details on <see href="https://docs.microsoft.com/en-us/dotnet/api/system.io.directory.delete"/>.</remarks>
         DirectoryInfo DeleteDirectory(string path);
 
         /// <summary>
@@ -263,7 +293,7 @@ namespace System.IO
         /// <exception cref="FileNotFoundException"><c>sourceFilePath</c> was not found.</exception>
         /// <exception cref="DirectoryNotFoundException">The path specified in <c>sourceFilePath</c> or <c>destFilePath</c> is invalid (for example, it is on an unmapped drive).</exception>
         /// <exception cref="NotSupportedException"><c>sourceFilePath</c> or <c>destinationFilePath</c> is in an invalid format.</exception>
-        /// <exception cref="UnauthorizedAccessException">https://learn.microsoft.com/en-us/dotnet/api/system.io.file.copy?view=net-8.0#system-io-file-copy(system-string-system-string-system-boolean):~:text=The%20caller%20does,is%20not%20hidden.</exception>
+        /// <exception cref="UnauthorizedAccessException">https://learn.microsoft.com/en-us/dotnet/api/system.io.file.copy#system-io-file-copy(system-string-system-string-system-boolean):~:text=The%20caller%20does,is%20not%20hidden.</exception>
         void CopyFile(string sourceFilePath, string destFilePath, bool overwrite);
 
         /// <summary>
@@ -277,7 +307,7 @@ namespace System.IO
         /// <exception cref="IOException">An I/O error has occurred.</exception>
         /// <exception cref="DirectoryNotFoundException">The path specified in <c>sourceDirPath</c> or <c>destDirPath</c> is invalid (for example, it is on an unmapped drive).</exception>
         /// <exception cref="NotSupportedException"><c>sourceDirPath</c> or <c>destDirPath</c> is in an invalid format.</exception>
-        /// <exception cref="UnauthorizedAccessException">https://learn.microsoft.com/en-us/dotnet/api/system.io.file.copy?view=net-8.0#system-io-file-copy(system-string-system-string-system-boolean):~:text=The%20caller%20does,is%20not%20hidden.</exception>
+        /// <exception cref="UnauthorizedAccessException">https://learn.microsoft.com/en-us/dotnet/api/system.io.file.copy#system-io-file-copy(system-string-system-string-system-boolean):~:text=The%20caller%20does,is%20not%20hidden.</exception>
         /// <returns>The collection of the file which was copied sucessfully.</returns>
         IEnumerable<FileInfo> CopyFiles(string sourceDirPath, string destDirPath);
 
@@ -327,7 +357,7 @@ namespace System.IO
         /// </summary>
         /// <param name="filePath">The path of file to read.</param>
         /// <param name="fileContent">The file content.</param>
-        /// <exception>See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.writealltext?view=net-8.0#system-io-file-writealltext(system-string-system-string)"/>.</exception>
+        /// <exception>See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.writealltext#system-io-file-writealltext(system-string-system-string)"/>.</exception>
         void WriteAllText(string filePath, string fileContent);
 
         #endregion

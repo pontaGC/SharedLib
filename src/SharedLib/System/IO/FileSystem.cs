@@ -125,11 +125,32 @@ namespace System.IO
             return RetryHelper.InvokeWithRetry(() => File.ReadAllText(filePath));
         }
 
-        /// <inhertidoc />
-        public IReadOnlyCollection<string> ReadAllLine(string filePath, Encoding encording)
+        /// <inheritdoc />
+        public IEnumerable<string> ReadLines(string filePath, Encoding? encoding)
         {
-            var textEncording = encording ?? Encoding.UTF8;
-            return RetryHelper.InvokeWithRetry(() => File.ReadAllLines(filePath, textEncording));
+            encoding ??= Encoding.UTF8;
+            return RetryHelper.InvokeWithRetry(() => File.ReadLines(filePath, encoding));
+        }
+
+        /// <inhertidoc />
+        public IAsyncEnumerable<string> ReadLinesAsync(string filePath, Encoding? encoding = null, CancellationToken cancellationToken = default)
+        {
+            encoding ??= Encoding.UTF8;           
+            return File.ReadLinesAsync(filePath, encoding, cancellationToken);
+        }
+
+        /// <inhertidoc />
+        public IReadOnlyCollection<string> ReadAllLines(string filePath, Encoding? encoding)
+        {
+            encoding ??= Encoding.UTF8;
+            return RetryHelper.InvokeWithRetry(() => File.ReadAllLines(filePath, encoding));
+        }
+
+        /// <inheritdoc />
+        public async Task<IReadOnlyCollection<string>> ReadAllLinesAsync(string filePath, Encoding? encoding = null, CancellationToken cancellationToken = default)
+        {
+            encoding ??= Encoding.UTF8;
+            return await RetryHelper.InvokeAsyncWithRetry<IReadOnlyCollection<string>>(async () => await File.ReadAllLinesAsync(filePath, encoding, cancellationToken));
         }
 
         #endregion
