@@ -303,10 +303,38 @@ namespace System.IO
             return Path.Combine(directoryName, filename);
         }
 
-        /// <inhertidoc />
-        public void WriteAllText(string filePath, string fileContent)
+        /// <inheritdoc />
+        public StreamWriter AppendText(string filePath)
         {
-            RetryHelper.InvokeWithRetry(() => File.WriteAllText(filePath, fileContent));
+            return RetryHelper.InvokeWithRetry(() => File.AppendText(filePath));
+        }
+
+        /// <inheritdoc />
+        public void AppendAllText(string filePath, string? fileContent, Encoding? encoding = null)
+        {
+            encoding ??= Encoding.UTF8;
+            RetryHelper.InvokeWithRetry(() => File.AppendAllText(filePath, fileContent, encoding));
+        }
+
+        /// <inheritdoc />
+        public async Task AppendAllTextAsync(string filePath, string? fileContent, Encoding? encoding, CancellationToken cancellationToken = default)
+        {
+            encoding ??= Encoding.UTF8;
+            await RetryHelper.InvokeAsyncWithRetry(async () => await File.AppendAllTextAsync(filePath, fileContent, encoding, cancellationToken));
+        }
+
+        /// <inhertidoc />
+        public void WriteAllText(string filePath, string? fileContent, Encoding? encoding)
+        {
+            encoding ??= Encoding.UTF8;
+            RetryHelper.InvokeWithRetry(() => File.WriteAllText(filePath, fileContent, encoding));
+        }
+
+        /// <inhertidoc />
+        public async Task WriteAllTextAsync(string filePath, string? fileContent, Encoding? encoding = null, CancellationToken cancellationToken = default)
+        {
+            encoding ??= Encoding.UTF8;
+            await RetryHelper.InvokeAsyncWithRetry(async () => await File.WriteAllTextAsync(filePath, fileContent, encoding, cancellationToken));
         }
 
         #endregion

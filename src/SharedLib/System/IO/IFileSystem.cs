@@ -352,13 +352,65 @@ namespace System.IO
         string ChangeFilename(string path, string filename);
 
         /// <summary>
+        /// Creates a <see cref="StreamWriter"/> that appends UTF-8 encoded text to an existing file, or to a new file if the specified file does not exist.
+        /// </summary>
+        /// <param name="filePath">The path of a file to write.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="filePath"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="filePath"/> is an empty string, or contains the name of a system device (com1, com2, and so on)..</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length.</exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, the directory doesn't exist or it is on an unmapped drive).</exception>
+        /// <exception cref="NotSupportedException"><paramref name="filePath"/> is <c>null</c>.</exception>
+        /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
+        /// <exception cref="UnauthorizedAccessException">Access is denied.</exception>
+        StreamWriter AppendText(string filePath);
+
+        /// <summary>
+        /// Appends the specified string to the file using the specified encoding, creating the file if it does not already exist.
+        /// </summary>
+        /// <param name="filePath">The path of file to read.</param>
+        /// <param name="fileContent">The file content.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file. The default encoding is UTF-8.</param>
+        /// <exception>See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.appendalltext#system-io-file-appendalltext(system-string-system-string-system-text-encoding)"/>.</exception>
+        void AppendAllText(string filePath, string? fileContent, Encoding? encoding = null);
+
+        /// <summary>
+        /// Asynchronously opens a file or creates the file if it does not already exist, appends the specified string to the file using the specified encoding, and then closes the file.
+        /// </summary>
+        /// <param name="filePath">The path of file to read.</param>
+        /// <param name="fileContent">The file content.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file. The default encoding is UTF-8.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        /// <returns>A task that represents the asynchronous append operation.</returns>
+        /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+        /// <remarks>
+        /// This method stores in the task it returns all non-usage exceptions that the method's synchronous counterpart can throw.
+        /// For the stored exceptions, see the exceptions thrown by <see cref="AppendAllText(string, string?, Encoding?)"/>.
+        /// </remarks>
+        Task AppendAllTextAsync(string filePath, string? fileContent, Encoding? encoding, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Creates a new file, writes the specified string to the file,
         /// and then closes the file. If the target file already exists, it is truncated and overwritten.
         /// </summary>
         /// <param name="filePath">The path of file to read.</param>
         /// <param name="fileContent">The file content.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file. The default encoding is UTF-8.</param>
         /// <exception>See <see cref="https://learn.microsoft.com/en-us/dotnet/api/system.io.file.writealltext#system-io-file-writealltext(system-string-system-string)"/>.</exception>
-        void WriteAllText(string filePath, string fileContent);
+        void WriteAllText(string filePath, string? fileContent, Encoding? encoding = null);
+
+        /// <summary>
+        /// Asynchronously creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is truncated and overwritten.
+        /// </summary>
+        /// <param name="filePath">The path of file to read.</param>
+        /// <param name="fileContent">The file content.</param>
+        /// <param name="encoding">The encoding applied to the contents of the file. The default encoding is UTF-8.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+        /// <remarks>
+        /// This method stores in the task it returns all non-usage exceptions that the method's synchronous counterpart can throw.
+        /// For the stored exceptions, see the exceptions thrown by <see cref="WriteAllText(string, string?, Encoding?)"/>.
+        /// </remarks>
+        Task WriteAllTextAsync(string filePath, string? fileContent, Encoding? encoding = null, CancellationToken cancellationToken = default);
 
         #endregion
 
